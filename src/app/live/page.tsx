@@ -38,33 +38,43 @@ export default function LiveMonitoringPage() {
           ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
           const frameData = canvas.toDataURL("image/jpeg");
 
-          const res = await fetch("http://127.0.0.1:8000/api/stress", {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-            },
-            body: JSON.stringify({ image: frameData }),
-          });
+          try {
+            // Send the image data to the backend to get the stress score
+            const response = await fetch("http://127.0.0.1:8000/api/stress", {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+              },
+              body: JSON.stringify({ image: frameData }),
+            });
 
-          if (!res.ok) {
-            throw new Error("Failed to fetch stress score");
+            if (!response.ok) {
+              throw new Error("Failed to fetch stress score");
+            }
+
+            // Parse the response from the backend
+            const data = await response.json();
+            console.log("Stress Score:", data.stressScore);
+
+            // Store the stress score in localStorage
+            const today = new Date().toISOString().split("T")[0]; // Current date
+            const stressLogs = JSON.parse(localStorage.getItem("stressLogs") || "{}");
+            
+            if (!stressLogs[today]) {
+              stressLogs[today] = [];
+            }
+
+            stressLogs[today].push(data.stressScore);
+            localStorage.setItem("stressLogs", JSON.stringify(stressLogs));
+
+            // Update the state to reflect the new stress score
+            setStressScore(data.stressScore);
+
+          } catch (error) {
+            console.error("Error fetching stress score:", error);
           }
-
-          const data = await res.json();
-          console.log("Stress Score:", data.stressScore);
-
-          const today = new Date().toISOString().split("T")[0];
-
-          const existing = JSON.parse(localStorage.getItem("stressLogs") || "{}");
-          if (!existing[today]) {
-            existing[today] = [];
-          }
-          existing[today].push(data.stressScore);
-
-          localStorage.setItem("stressLogs", JSON.stringify(existing));
-          setStressScore(data.stressScore);
         }
-      }, 4000);
+      }, 1000); // Set the interval to 1 second
     }
 
     return () => clearInterval(interval);
