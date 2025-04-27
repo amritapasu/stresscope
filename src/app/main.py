@@ -1,3 +1,4 @@
+"""
 from fastapi import FastAPI, File, UploadFile
 from pydantic import BaseModel
 import uvicorn
@@ -64,3 +65,5 @@ async def predict(data: StressRequest):
 if __name__ == "__main__":
     # Run FastAPI with Uvicorn when this script is executed
     uvicorn.run(app, host="127.0.0.1", port=8000)
+*/
+"""
