@@ -1,12 +1,23 @@
 from fastapi import FastAPI, Request
 from pydantic import BaseModel
+import numpy as np
+import cv2
 import base64
 from io import BytesIO
 from PIL import Image
-from src.backend.ml_model.model import load_pre_trained_model, predict_stress
+from .ml_model.model import load_pre_trained_model, predict_stress, calculate_stress_level
+from fastapi.middleware.cors import CORSMiddleware
 
 # FastAPI initialization
 app = FastAPI()
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["http://localhost:3000"],  # Frontend URL
+    allow_credentials=True,
+    allow_methods=["*"],  # Allows all methods (GET, POST, etc.)
+    allow_headers=["*"],  # Allows all headers
+)
 
 # Model initialization
 model = None
@@ -21,6 +32,11 @@ def load_model():
 # Pydantic model to parse incoming data
 class StressRequest(BaseModel):
     image: str
+
+# Optionally, you can add a health check or root endpoint:
+@app.get("/")
+async def read_root():
+    return {"message": "Welcome to the Stress API"}
 
 # Define the endpoint to process the image and get the stress score
 @app.post("/api/stress")
@@ -39,12 +55,21 @@ async def handler(request: Request):
         # Decode the base64 image and process it for prediction
         img_data = base64.b64decode(image_data.split(",")[1])
         image = Image.open(BytesIO(img_data))
+
+        image_np = np.array(image)
+
+        if image_np.shape[-1] == 4:
+            image_np = cv2.cvtColor(image_np, cv2.COLOR_RGBA2RGB)
         
         # Predict the stress score using the model
-        predicted_score = predict_stress(model, np.array(image))
+        predicted_score = predict_stress(model, image)
+        print("Predicted score:", predicted_score)
+       
+        stress_level = calculate_stress_level(predicted_score)
+        print("Stress level:", stress_level)
 
         # Return the stress score
-        return {"stressScore": predicted_score}
+        return {"stressScore": stress_level}
 
     except Exception as e:
         return {"error": f"Error processing the image: {str(e)}"}, 500

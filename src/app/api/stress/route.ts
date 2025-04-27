@@ -4,7 +4,9 @@ import { NextResponse } from "next/server";
 async function fetchStressScoreFromModel(imageBase64: string) {
   try {
     // Assuming the FastAPI backend is deployed on Vercel
-    const response = await fetch("https://stresscope.vercel.app/api/stress", { // Replace with your deployed FastAPI URL
+    console.log("API URL from env:", process.env.NEXT_PUBLIC_API_URL);
+    console.log("Sending POST to:", `${process.env.NEXT_PUBLIC_API_URL}/api/stress`);
+    const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/stress`, { // Replace with your deployed FastAPI URL
       method: "POST",
       headers: {
         "Content-Type": "application/json",
