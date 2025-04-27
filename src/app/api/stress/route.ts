@@ -1,7 +1,7 @@
 // src/app/api/stress/route.ts
 import { NextResponse } from "next/server";
 
-export async function POST(req: Request) {
+export async function POST() {
 
   // 🧠 (Placeholder: here is where you run your ML model!)
 
