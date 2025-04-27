@@ -13,10 +13,10 @@ app = FastAPI()
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["https://stresscope.vercel.app"],  # Frontend URL
+    allow_origins=["*"],  # Or specify your frontend URL here
     allow_credentials=True,
-    allow_methods=["*"],  # Allows all methods (GET, POST, etc.)
-    allow_headers=["*"],  # Allows all headers
+    allow_methods=["*"],
+    allow_headers=["*"],
 )
 
 # Model initialization
@@ -41,6 +41,7 @@ async def read_root():
 # Define the endpoint to process the image and get the stress score
 @app.post("/api/stress")
 async def handler(request: Request):
+    print("begin")
     # Load model on first request if not already loaded
     load_model()
 
@@ -51,6 +52,7 @@ async def handler(request: Request):
     if not image_data:
         return {"error": "No image provided"}, 400
 
+    print("here")
     try:
         # Decode the base64 image and process it for prediction
         img_data = base64.b64decode(image_data.split(",")[1])
@@ -60,7 +62,7 @@ async def handler(request: Request):
 
         if image_np.shape[-1] == 4:
             image_np = cv2.cvtColor(image_np, cv2.COLOR_RGBA2RGB)
-        
+
         # Predict the stress score using the model
         predicted_score = predict_stress(model, image)
         print("Predicted score:", predicted_score)
