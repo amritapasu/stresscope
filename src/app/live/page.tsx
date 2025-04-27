@@ -103,15 +103,24 @@ export default function LiveMonitoringPage() {
           className="rounded-lg shadow-lg w-full max-w-md transform scale-x-[-1]" // Mirrored video
         />
 
-        <div className="mt-4 text-center bg-white/70 backdrop-blur-md p-6 rounded-lg shadow-md flex flex-col items-center">
-        <h2 className="text-xl font-semibold text-gray-700">Current Stress Score:</h2>
-        <p className="text-4xl font-bold text-blue-600 mt-2">
-            {stressScore !== undefined && stressScore !== null ? stressScore.toFixed(2) : "Loading..."}%
-        </p>
-        <div className="w-full bg-gray-300 rounded-full h-4 mt-4">
-            {/* Progress bar or other components */}
-        </div>
-        </div>
+<div className="mt-4 text-center bg-white/70 backdrop-blur-md p-6 rounded-lg shadow-md flex flex-col items-center">
+  <h2 className="text-xl font-semibold text-gray-700">Current Stress Score:</h2>
+  <p className="text-4xl font-bold text-blue-600 mt-2">
+    {stressScore !== undefined && stressScore !== null ? stressScore.toFixed(2) : "Loading..."}%
+  </p>
+  
+    {/* Progress bar */}
+    <div className="w-full bg-gray-300 rounded-full h-4 mt-4">
+      <div
+        className="h-full rounded-full"
+        style={{
+          width: `${stressScore}%`, // Set width based on the stress score
+          backgroundColor: stressScore > 50 ? 'red' : stressScore > 20 ? 'yellow' : 'green', // Color change based on stress level
+        }}
+      />
+    </div>
+  </div>
+
 
         <button
           onClick={() => setIsCapturing((prev) => !prev)}

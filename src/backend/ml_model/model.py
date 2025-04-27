@@ -55,7 +55,20 @@ def predict_stress(model, frame):
     return preds[0]
 
 def calculate_stress_level(emotion_probs):
-    Angry, Disgust, Fear, Happy, Sad, Surprise, Neutral = emotion_probs
+    '''Angry, Disgust, Fear, Happy, Sad, Surprise, Neutral = emotion_probs
+    print()
     stress_level = 0.4 * Angry + 0.3 * Fear + 0.2 * Sad + 0.1 * Disgust - 0.3 * Happy - 0.1 * Neutral
+    stress_level = np.clip(stress_level, 0, 1)'''
+    import numpy as np
+
+    # Example emotion probabilities (replace these with actual values)
+    Angry, Disgust, Fear, Happy, Sad, Surprise, Neutral = emotion_probs
+
+    # Calculate the stress level
+    stress_level = 0.3 + 0.5 * Angry + 0.4 * Fear + 0.4 * Sad + 0.1 * Disgust - 0.6 * Happy - 0.3 * Neutral
     stress_level = np.clip(stress_level, 0, 1)
+
+    # Print the final stress level
+    print(f"\nCalculated Stress Level: {stress_level * 100:.2f}%")
+
     return int(stress_level * 100)

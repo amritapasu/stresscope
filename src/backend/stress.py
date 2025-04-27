@@ -41,6 +41,7 @@ async def read_root():
 # Define the endpoint to process the image and get the stress score
 @app.post("/api/stress")
 async def handler(request: Request):
+
     # Load model on first request if not already loaded
     load_model()
 
@@ -63,10 +64,10 @@ async def handler(request: Request):
         
         # Predict the stress score using the model
         predicted_score = predict_stress(model, image)
-        print("Predicted score:", predicted_score)
+        #print("Predicted score:", predicted_score)
        
         stress_level = calculate_stress_level(predicted_score)
-        print("Stress level:", stress_level)
+        #print("Stress level:", stress_level)
 
         # Return the stress score
         return {"stressScore": stress_level}
