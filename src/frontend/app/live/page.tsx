@@ -1,5 +1,5 @@
 "use client";
-import NavBar from "@/components/NavBar";
+import NavBar from "@/frontend/components/NavBar";  // Correct import path for NavBar component
 import { useEffect, useRef, useState } from "react";
 
 export default function LiveMonitoringPage() {
@@ -7,6 +7,7 @@ export default function LiveMonitoringPage() {
   const [isCapturing, setIsCapturing] = useState(false);
   const [stressScore, setStressScore] = useState<number>(0);
 
+  // Start the webcam stream when the component mounts
   useEffect(() => {
     async function startCamera() {
       try {
@@ -22,6 +23,7 @@ export default function LiveMonitoringPage() {
     startCamera();
   }, []);
 
+  // Set up interval for capturing frames and sending them to the backend
   useEffect(() => {
     let interval: NodeJS.Timeout;
 
@@ -29,6 +31,7 @@ export default function LiveMonitoringPage() {
       interval = setInterval(async () => {
         if (!videoRef.current) return;
 
+        // Create a canvas to capture the frame from the video
         const canvas = document.createElement("canvas");
         const video = videoRef.current;
         canvas.width = video.videoWidth;
@@ -40,7 +43,7 @@ export default function LiveMonitoringPage() {
 
           try {
             // Update the backend URL to your deployed FastAPI backend
-            const response = await fetch("https://stresscope.vercel.app/api/stress", {  // Use the Vercel backend URL here
+            const response = await fetch("https://stresscope.vercel.app/api/stress", {  // Use your actual FastAPI backend URL
               method: "POST",
               headers: {
                 "Content-Type": "application/json",
@@ -74,15 +77,15 @@ export default function LiveMonitoringPage() {
             console.error("Error fetching stress score:", error);
           }
         }
-      }, 3000); // Set the interval to 1 second
+      }, 3000); // Capture frame every 3 seconds
     }
 
-    return () => clearInterval(interval);
+    return () => clearInterval(interval); // Clear interval when capturing stops
   }, [isCapturing]);
 
   return (
     <main className="flex flex-col min-h-screen bg-gradient-to-b from-blue-100 via-white to-green-100">
-      <NavBar />
+      <NavBar />  {/* Correctly imported NavBar component */}
 
       <section className="flex flex-col items-center justify-center flex-grow p-6 gap-8">
         <h1 className="text-3xl font-bold">Live Stress Monitoring</h1>
@@ -93,7 +96,7 @@ export default function LiveMonitoringPage() {
           autoPlay
           muted
           playsInline
-          className="rounded-lg shadow-lg w-full max-w-md transform scale-x-[-1]"
+          className="rounded-lg shadow-lg w-full max-w-md transform scale-x-[-1]" // Mirrored video
         />
 
         <div className="mt-4 text-center bg-white/70 backdrop-blur-md p-6 rounded-lg shadow-md flex flex-col items-center">
