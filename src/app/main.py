@@ -23,31 +23,21 @@ async def startup():
 # Prediction endpoint to accept base64-encoded image
 @app.post("/api/stress")
 async def predict(data: dict):
-    print("Starting prediction!")
     if model is None:
-        # If the model isn't loaded yet (for some reason), load it
         model = load_pre_trained_model()
-
-    # Extract base64 image from the request body
+    
     base64_image = data.get("image")
     if not base64_image:
-        return {"error": "No image provided"}
+        return {"error": "No image provided"}, 400
 
-    # Decode the base64 string into bytes
     try:
-        img_data = base64.b64decode(base64_image.split(",")[1])  # Remove 'data:image/jpeg;base64,' part
+        img_data = base64.b64decode(base64_image.split(",")[1])  
+        image = Image.open(BytesIO(img_data))
+        predicted_score = predict_stress(image)
+        print("Predicted score: ", predicted_score)
+        return {"stressScore": predicted_score}
     except Exception as e:
-        return {"error": f"Error decoding base64 image: {str(e)}"}
-
-    # Convert bytes data into an image
-    image = Image.open(BytesIO(img_data))
-
-    # Get the predicted stress score based on the processed image
-    predicted_score = predict_stress(image)
-    print("Predicted score: ", predicted_score)
-
-
-    return {"stressScore": predicted_score}
+        return {"error": f"Error processing the image: {str(e)}"}, 500
 
 if __name__ == "__main__":
     # Run FastAPI with Uvicorn when this script is executed
