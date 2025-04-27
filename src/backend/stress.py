@@ -13,10 +13,10 @@ app = FastAPI()
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["https://stresscope-one.vercel.app"],  # You can specify the frontend's URL here instead of "*"
+    allow_origins=["*"],  # Allow all origins for testing
     allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"],
+    allow_methods=["*"],  # Allow all methods (GET, POST, etc.)
+    allow_headers=["*"],  # Allow all headers
 )
 
 # Model initialization
@@ -37,6 +37,7 @@ class StressRequest(BaseModel):
 @app.get("/")
 async def read_root():
     return {"message": "Welcome to the Stress API"}
+
 
 # Define the endpoint to process the image and get the stress score
 @app.post("/api/stress")
