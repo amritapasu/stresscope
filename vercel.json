@@ -11,6 +11,6 @@
       }
     ],
     "env": {
-      "NEXT_PUBLIC_API_URL": "https://stresscope-one.vercel.app/api/stress"
+      "NEXT_PUBLIC_API_URL": "https://stresscope-one.vercel.app"
     }
   }
