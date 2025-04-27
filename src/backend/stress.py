@@ -41,7 +41,6 @@ async def read_root():
 # Define the endpoint to process the image and get the stress score
 @app.post("/api/stress")
 async def handler(request: Request):
-    print("begin")
     # Load model on first request if not already loaded
     load_model()
 
@@ -52,8 +51,8 @@ async def handler(request: Request):
     if not image_data:
         return {"error": "No image provided"}, 400
 
-    print("here")
     try:
+        """
         # Decode the base64 image and process it for prediction
         img_data = base64.b64decode(image_data.split(",")[1])
         image = Image.open(BytesIO(img_data))
@@ -66,8 +65,10 @@ async def handler(request: Request):
         # Predict the stress score using the model
         predicted_score = predict_stress(model, image)
         print("Predicted score:", predicted_score)
+        """
        
-        stress_level = calculate_stress_level(predicted_score)
+        #stress_level = calculate_stress_level(predicted_score)
+        stress_level = 75
         print("Stress level:", stress_level)
 
         # Return the stress score
