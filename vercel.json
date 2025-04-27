@@ -21,6 +21,6 @@
       }
     ],
     "env": {
-      "NEXT_PUBLIC_API_URL": "https://localhost:8000"
+      "NEXT_PUBLIC_API_URL": "https://stresscope.vercel.app/api/stress"
     }
   }
