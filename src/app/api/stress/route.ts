@@ -1,6 +1,5 @@
 //src/app/api/stress/route.ts
 import { NextResponse } from "next/server";
-import fetch from "node-fetch";  // Import fetch if you're doing server-side requests
 
 // Placeholder function for ML model interaction (for now, simulate prediction)
 async function fetchStressScoreFromModel(imageBase64: string) {
