@@ -13,14 +13,14 @@ export default function GardenPage() {
   useEffect(() => {
     const logs = JSON.parse(localStorage.getItem("stressLogs") || "{}");
     const today = new Date().toISOString().split("T")[0];
-  
+
     // 🌱 Check if garden already started
     let startDate = localStorage.getItem("gardenStartDate");
     if (!startDate) {
       startDate = today;
       localStorage.setItem("gardenStartDate", startDate);
     }
-  
+
     const todayLogs = logs[today] || [];
     if (todayLogs.length > 0) {
       const avgTodayStress = todayLogs.reduce((sum, val) => sum + val, 0) / todayLogs.length;
@@ -28,19 +28,19 @@ export default function GardenPage() {
     } else {
       setStressToday(0);
     }
-  
+
     let successfulDays = 0;
     const results: ("✅" | "❌" | "➖")[] = [];
-  
+
     for (let i = 13; i >= 0; i--) {
       const date = new Date();
       date.setDate(date.getDate() - i);
       const dateString = date.toISOString().split("T")[0];
-  
+
       // 🧠 Only count days AFTER garden start
       if (dateString >= startDate) {
         const dayLogs = logs[dateString] || [];
-  
+
         if (dayLogs.length > 0) {
           const avg = dayLogs.reduce((sum: number, val: number) => sum + val, 0) / dayLogs.length;
           if (avg < 50) {
@@ -56,11 +56,10 @@ export default function GardenPage() {
         results.push("➖"); // don't count old days
       }
     }
-  
+
     setDailyResults(results);
     setGrowthStage(successfulDays);
   }, []);
-  
 
   const getTreeEmoji = (stage: number) => {
     if (stage <= 1) return "🌱";
@@ -69,7 +68,7 @@ export default function GardenPage() {
     if (stage <= 7) return "🌴";
     return "🎄";
   };
-  
+
   const getTreeMessage = (stage: number) => {
     if (stage <= 1) return "Your sapling is just starting!";
     if (stage <= 3) return "Your sprout is growing!";
@@ -77,7 +76,6 @@ export default function GardenPage() {
     if (stage <= 7) return "Your tree is strong and proud!";
     return "Your tree has reached legendary status! ✨🌟";
   };
-  
 
   return (
     <main className="flex flex-col min-h-screen bg-gradient-to-b from-green-200 via-green-100 to-blue-100 relative">
@@ -98,7 +96,7 @@ export default function GardenPage() {
         <h1 className="text-2xl md:text-3xl font-bold text-gray-700 text-center">{getTreeMessage(growthStage)}</h1>
 
         <div className="text-center mt-6 text-gray-500">
-          Today's Average Stress: {stressToday.toFixed(2)}%
+          Today&apos;s Average Stress: {stressToday.toFixed(2)}%
         </div>
 
         {/* 📅 Mini Calendar */}
