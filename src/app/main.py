@@ -8,11 +8,15 @@ from io import BytesIO
 
 from fastapi.middleware.cors import CORSMiddleware
 
+class StressRequest(BaseModel):
+    image: str
+
 app = FastAPI()
 
 origins = [
-    "http://localhost:3000",  # Adjust the frontend's URL if it's running on a different port
-    "http://stresscope.vercel.app",  # Add additional allowed origins if necessary
+    "http://localhost:3000",  # Your frontend URL (adjust if different)
+    "http://localhost",  # If necessary, include additional origins
+    "https://stresscope.vercel.app",  # Add this if you have a production frontend
 ]
 
 app.add_middleware(
@@ -36,7 +40,7 @@ async def startup():
 
 # Prediction endpoint to accept base64-encoded image
 @app.post("/api/stress")
-async def predict(data: dict):
+async def predict(data: StressRequest):
     print(f"Received image data: {data.image}")
     return {"stressScore": 75}
     global model
