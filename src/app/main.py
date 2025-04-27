@@ -23,6 +23,7 @@ async def startup():
 # Prediction endpoint to accept base64-encoded image
 @app.post("/api/stress")
 async def predict(data: dict):
+    print("Starting prediction!")
     if model is None:
         # If the model isn't loaded yet (for some reason), load it
         model = load_pre_trained_model()
