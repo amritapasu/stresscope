@@ -2,11 +2,12 @@ import numpy as np
 import cv2
 from tensorflow.keras.optimizers import Adam
 from tensorflow.keras.models import load_model
+from PIL import Image
 
 # Function to load pre-trained model
 def load_pre_trained_model():
     # Adjust the model path according to your folder structure
-    model_path = "src/backend/ml_model/fer2013_mini_XCEPTION.102-0.66.hdf5"
+    model_path = "./backend/ml_model/fer2013_mini_XCEPTION.102-0.66.hdf5"
     
     # Load the model
     pre_trained_model = load_model(model_path, compile=False)
@@ -27,8 +28,16 @@ def preprocess_input(x):
 
 # Function to predict stress score based on the frame
 def predict_stress(model, frame):
-    # Convert the frame to grayscale
-    gray_frame = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
+    print("Predicting...")
+
+    # Convert PIL Image to NumPy array (BGR format, OpenCV expects this)
+    frame_np = np.array(frame)
+
+    # Convert from RGB to BGR (Pillow uses RGB, OpenCV uses BGR by default)
+    frame_bgr = cv2.cvtColor(frame_np, cv2.COLOR_RGB2BGR)
+
+    # Convert to grayscale
+    gray_frame = cv2.cvtColor(frame_bgr, cv2.COLOR_BGR2GRAY)
 
     # Resize the frame to 64x64 pixels (input size expected by the model)
     resized_frame = cv2.resize(gray_frame, (64, 64))
@@ -44,3 +53,9 @@ def predict_stress(model, frame):
     preds = model.predict(resized_frame, verbose=0)
 
     return preds[0]
+
+def calculate_stress_level(emotion_probs):
+    Angry, Disgust, Fear, Happy, Sad, Surprise, Neutral = emotion_probs
+    stress_level = 0.4 * Angry + 0.3 * Fear + 0.2 * Sad + 0.1 * Disgust - 0.3 * Happy - 0.1 * Neutral
+    stress_level = np.clip(stress_level, 0, 1)
+    return int(stress_level * 100)

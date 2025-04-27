@@ -1,5 +1,5 @@
 "use client";
-import NavBar from "@/frontend/components/NavBar";  // Correct import path for NavBar component
+import NavBar from "@/components/NavBar";  // Correct import path for NavBar component
 import { useEffect, useRef, useState } from "react";
 
 export default function LiveMonitoringPage() {
@@ -43,7 +43,9 @@ export default function LiveMonitoringPage() {
 
           try {
             // Update the backend URL to your deployed FastAPI backend
-            const response = await fetch("https://stresscope.vercel.app/api/stress", {  // Use your actual FastAPI backend URL
+            console.log("API URL from env:", process.env.NEXT_PUBLIC_API_URL);
+            console.log("Sending POST to:", `${process.env.NEXT_PUBLIC_API_URL}/api/stress`);
+            const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/stress`, {  // Use your actual FastAPI backend URL
               method: "POST",
               headers: {
                 "Content-Type": "application/json",
@@ -52,8 +54,10 @@ export default function LiveMonitoringPage() {
             });
 
             if (!response.ok) {
-              throw new Error("Failed to fetch stress score");
-            }
+                const errorText = await response.text();  // Capture the error response
+                console.error("Error response:", errorText);
+                throw new Error("Failed to fetch stress score");
+              }
 
             // Parse the response from the backend
             const data = await response.json();
@@ -100,17 +104,13 @@ export default function LiveMonitoringPage() {
         />
 
         <div className="mt-4 text-center bg-white/70 backdrop-blur-md p-6 rounded-lg shadow-md flex flex-col items-center">
-          <h2 className="text-xl font-semibold text-gray-700">Current Stress Score:</h2>
-          <p className="text-4xl font-bold text-blue-600 mt-2">{stressScore.toFixed(2)}%</p>
-
-          <div className="w-full bg-gray-300 rounded-full h-4 mt-4">
-            <div
-              className={`h-4 rounded-full ${
-                stressScore < 33 ? "bg-green-500" : stressScore < 66 ? "bg-yellow-500" : "bg-red-500"
-              }`}
-              style={{ width: `${stressScore}%` }}
-            ></div>
-          </div>
+        <h2 className="text-xl font-semibold text-gray-700">Current Stress Score:</h2>
+        <p className="text-4xl font-bold text-blue-600 mt-2">
+            {stressScore !== undefined && stressScore !== null ? stressScore.toFixed(2) : "Loading..."}%
+        </p>
+        <div className="w-full bg-gray-300 rounded-full h-4 mt-4">
+            {/* Progress bar or other components */}
+        </div>
         </div>
 
         <button
