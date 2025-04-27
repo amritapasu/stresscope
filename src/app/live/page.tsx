@@ -38,13 +38,21 @@ export default function LiveMonitoringPage() {
           ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
           const frameData = canvas.toDataURL("image/jpeg");
 
-          const res = await fetch("/api/stress", {
+          const res = await fetch("http://127.0.0.1:8000/api/stress", {
             method: "POST",
-            headers: { "Content-Type": "application/json" },
+            headers: {
+              "Content-Type": "application/json",
+            },
             body: JSON.stringify({ image: frameData }),
           });
 
+          if (!res.ok) {
+            throw new Error("Failed to fetch stress score");
+          }
+
           const data = await res.json();
+          console.log("Stress Score:", data.stressScore);
+
           const today = new Date().toISOString().split("T")[0];
 
           const existing = JSON.parse(localStorage.getItem("stressLogs") || "{}");

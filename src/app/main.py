@@ -6,8 +6,22 @@ from PIL import Image
 import base64
 from io import BytesIO
 
-# FastAPI app
+from fastapi.middleware.cors import CORSMiddleware
+
 app = FastAPI()
+
+origins = [
+    "http://localhost:3000",  # Adjust the frontend's URL if it's running on a different port
+    "http://stresscope.vercel.app",  # Add additional allowed origins if necessary
+]
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=origins,
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 # Global variable to hold the model
 model = None
@@ -23,6 +37,10 @@ async def startup():
 # Prediction endpoint to accept base64-encoded image
 @app.post("/api/stress")
 async def predict(data: dict):
+    print(f"Received image data: {data.image}")
+    return {"stressScore": 75}
+    global model
+
     if model is None:
         model = load_pre_trained_model()
     
