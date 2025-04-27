@@ -13,7 +13,7 @@ app = FastAPI()
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],  # Or specify your frontend URL here
+    allow_origins=["https://stresscope-one.vercel.app"],  # You can specify the frontend's URL here instead of "*"
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
