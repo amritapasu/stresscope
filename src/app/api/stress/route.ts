@@ -6,7 +6,8 @@ async function fetchStressScoreFromModel(imageBase64: string) {
     // Assuming the FastAPI backend is deployed on Vercel
     console.log("API URL from env:", process.env.NEXT_PUBLIC_API_URL);
     console.log("Sending POST to:", `${process.env.NEXT_PUBLIC_API_URL}/api/stress`);
-    const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/stress`, { // Replace with your deployed FastAPI URL
+    // const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/stress`, { // Replace with your deployed FastAPI URL
+    const response = await fetch('https://stresscope-one.vercel.app/api/stress', {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

@@ -45,7 +45,8 @@ export default function LiveMonitoringPage() {
             // Update the backend URL to your deployed FastAPI backend
             console.log("API URL from env:", process.env.NEXT_PUBLIC_API_URL);
             console.log("Sending POST to:", `${process.env.NEXT_PUBLIC_API_URL}/api/stress`);
-            const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/stress`, {  // Use your actual FastAPI backend URL
+            //const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/stress`, {  // Use your actual FastAPI backend URL
+            const response = await fetch('https://stresscope-one.vercel.app/api/stress', {
               method: "POST",
               headers: {
                 "Content-Type": "application/json",
