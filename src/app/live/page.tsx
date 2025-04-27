@@ -39,8 +39,8 @@ export default function LiveMonitoringPage() {
           const frameData = canvas.toDataURL("image/jpeg");
 
           try {
-            // Send the image data to the backend to get the stress score
-            const response = await fetch("http://127.0.0.1:8000/api/stress", {
+            // Update the backend URL to your deployed FastAPI backend
+            const response = await fetch("https://stresscope.vercel.app/api/stress", {  // Use the Vercel backend URL here
               method: "POST",
               headers: {
                 "Content-Type": "application/json",
@@ -59,7 +59,7 @@ export default function LiveMonitoringPage() {
             // Store the stress score in localStorage
             const today = new Date().toISOString().split("T")[0]; // Current date
             const stressLogs = JSON.parse(localStorage.getItem("stressLogs") || "{}");
-            
+
             if (!stressLogs[today]) {
               stressLogs[today] = [];
             }
@@ -74,7 +74,7 @@ export default function LiveMonitoringPage() {
             console.error("Error fetching stress score:", error);
           }
         }
-      }, 1000); // Set the interval to 1 second
+      }, 3000); // Set the interval to 1 second
     }
 
     return () => clearInterval(interval);

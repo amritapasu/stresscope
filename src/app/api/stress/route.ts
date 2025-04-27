@@ -1,30 +1,33 @@
-//src/app/api/stress/route.ts
 import { NextResponse } from "next/server";
 
-// Placeholder function for ML model interaction (for now, simulate prediction)
 async function fetchStressScoreFromModel(imageBase64: string) {
-  // Simulate a call to your FastAPI server
-  const response = await fetch("http://127.0.0.1:8000/api/stress", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify({
-      image: imageBase64,  // Pass the base64 string directly
-    }),
-  });
+  try {
+    // Assuming your FastAPI backend is deployed and accessible from the Vercel serverless function
+    const response = await fetch("https://stresscope.vercel.app/api/stress", { // Replace with your deployed FastAPI URL
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        image: imageBase64, // Send the base64 image
+      }),
+    });
 
-  if (!response.ok) {
-    throw new Error("Error fetching stress score");
+    if (!response.ok) {
+      throw new Error("Error fetching stress score from FastAPI");
+    }
+
+    const data = await response.json();
+    return data.stressScore;
+  } catch (error) {
+    console.error("Error during FastAPI request:", error);
+    throw error;
   }
-
-  const data = await response.json();
-  return data.stressScore;
 }
 
 export async function POST(request: Request) {
   try {
-    const { image } = await request.json(); // Extract the base64 image from the request body
+    const { image } = await request.json(); // Extract base64 image from request body
 
     if (!image) {
       return NextResponse.json({ error: "No image provided" }, { status: 400 });
@@ -32,12 +35,12 @@ export async function POST(request: Request) {
 
     console.log("Received image, predicting stress score...");
 
-    // Get the stress score from the FastAPI model
+    // Fetch the stress score from the FastAPI backend
     const stressScore = await fetchStressScoreFromModel(image);
 
     console.log("Predicted stress score: ", stressScore);
 
-    // Return the response in a consistent format
+    // Return the response
     return NextResponse.json({ stressScore });
   } catch (error) {
     console.error("Error in POST /api/stress:", error);
