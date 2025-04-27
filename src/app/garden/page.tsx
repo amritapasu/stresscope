@@ -23,7 +23,7 @@ export default function GardenPage() {
 
     const todayLogs = logs[today] || [];
     if (todayLogs.length > 0) {
-      const avgTodayStress = todayLogs.reduce((sum, val) => sum + val, 0) / todayLogs.length;
+      const avgTodayStress = todayLogs.reduce((sum: number, val: number) => sum + val, 0) / todayLogs.length;
       setStressToday(avgTodayStress);
     } else {
       setStressToday(0);
@@ -96,7 +96,7 @@ export default function GardenPage() {
         <h1 className="text-2xl md:text-3xl font-bold text-gray-700 text-center">{getTreeMessage(growthStage)}</h1>
 
         <div className="text-center mt-6 text-gray-500">
-          Today&apos;s Average Stress: {stressToday.toFixed(2)}%
+          Today's Average Stress: {stressToday.toFixed(2)}%
         </div>
 
         {/* 📅 Mini Calendar */}
@@ -112,7 +112,6 @@ export default function GardenPage() {
           ))}
         </div>
         <p className="text-sm text-gray-400 mt-2">(Past 14 days)</p>
-
       </section>
     </main>
   );
