@@ -56,7 +56,7 @@ export default function LiveMonitoringPage() {
           localStorage.setItem("stressLogs", JSON.stringify(existing));
           setStressScore(data.stressScore);
         }
-      }, 10000);
+      }, 4000);
     }
 
     return () => clearInterval(interval);
