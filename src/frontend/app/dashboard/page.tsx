@@ -1,5 +1,5 @@
 "use client";
-import NavBar from "@/components/NavBar";
+import NavBar from "@/frontend/components/NavBar";
 
 export default function DashboardPage() {
   return (

@@ -1,9 +1,9 @@
 "use client";
 
-import NavBar from "@/components/NavBar";
+import NavBar from "@/frontend/components/NavBar";
 import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
-import LeafParticles from "@/components/LeafParticles";
+import LeafParticles from "@/frontend/components/LeafParticles";
 
 export default function GardenPage() {
   const [growthStage, setGrowthStage] = useState(0);

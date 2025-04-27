@@ -1,15 +1,16 @@
 import { NextResponse } from "next/server";
 
+// Function to fetch the stress score from the FastAPI model
 async function fetchStressScoreFromModel(imageBase64: string) {
   try {
-    // Assuming your FastAPI backend is deployed and accessible from the Vercel serverless function
+    // Assuming the FastAPI backend is deployed on Vercel
     const response = await fetch("https://stresscope.vercel.app/api/stress", { // Replace with your deployed FastAPI URL
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        image: imageBase64, // Send the base64 image
+        image: imageBase64,  // Sending the base64 image string
       }),
     });
 
@@ -21,29 +22,34 @@ async function fetchStressScoreFromModel(imageBase64: string) {
     return data.stressScore;
   } catch (error) {
     console.error("Error during FastAPI request:", error);
-    throw error;
+    throw new Error("Failed to fetch stress score");
   }
 }
 
+// Serverless function handler for the POST request
 export async function POST(request: Request) {
   try {
-    const { image } = await request.json(); // Extract base64 image from request body
+    // Parse the incoming request to get the base64 image data
+    const { image } = await request.json();
 
+    // Validate if image is provided
     if (!image) {
       return NextResponse.json({ error: "No image provided" }, { status: 400 });
     }
 
     console.log("Received image, predicting stress score...");
 
-    // Fetch the stress score from the FastAPI backend
+    // Fetch the stress score by calling FastAPI
     const stressScore = await fetchStressScoreFromModel(image);
 
     console.log("Predicted stress score: ", stressScore);
 
-    // Return the response
+    // Return the stress score as a JSON response
     return NextResponse.json({ stressScore });
   } catch (error) {
     console.error("Error in POST /api/stress:", error);
+
+    // Return a 500 response with the error details
     return NextResponse.json({ error: "Internal server error" }, { status: 500 });
   }
 }

@@ -1,7 +1,7 @@
 "use client";
 import { useEffect, useState } from "react";
 import Link from "next/link";
-import NavBar from "@/components/NavBar";
+import NavBar from "@/frontend/components/NavBar";
 
 export default function HistoryPage() {
   const [history, setHistory] = useState<{ [date: string]: number[] }>({});

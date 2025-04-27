@@ -1,13 +1,27 @@
 {
     "version": 2,
+    "builds": [
+      {
+        "src": "src/frontend/package.json",
+        "use": "@vercel/next"
+      },
+      {
+        "src": "src/backend/main.py",
+        "use": "@vercel/python"
+      }
+    ],
     "routes": [
       {
         "src": "/api/stress",
-        "dest": "/src/api/stress/stress.py"
+        "dest": "/src/backend/stress.py"
       },
       {
-        "src": "/api/stress",
-        "dest": "/src/api/stress/route.ts"
+        "src": "/(.*)",
+        "dest": "/src/frontend/$1"
       }
-    ]
+    ],
+    "env": {
+      "NEXT_PUBLIC_API_URL": "https://stresscope.vercel.app/api"
+    }
   }
+  
