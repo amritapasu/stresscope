@@ -1,15 +1,5 @@
 {
     "version": 2,
-    "builds": [
-      {
-        "src": "src/api/stress/stress.py",
-        "use": "@vercel/python"
-      },
-      {
-        "src": "src/api/stress/route.ts",
-        "use": "@vercel/node"
-      }
-    ],
     "routes": [
       {
         "src": "/api/stress",
