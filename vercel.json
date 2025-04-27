@@ -2,14 +2,22 @@
     "version": 2,
     "builds": [
       {
-        "src": "src/api/stress.py",
+        "src": "src/api/stress/stress.py",
         "use": "@vercel/python"
+      },
+      {
+        "src": "src/api/stress/route.ts",
+        "use": "@vercel/node"
       }
     ],
     "routes": [
       {
         "src": "/api/stress",
-        "dest": "src/api/stress.py"
+        "dest": "/src/api/stress/stress.py"
+      },
+      {
+        "src": "/api/stress",
+        "dest": "/src/api/stress/route.ts"
       }
     ]
   }
