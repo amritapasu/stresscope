@@ -96,7 +96,7 @@ export default function GardenPage() {
         <h1 className="text-2xl md:text-3xl font-bold text-gray-700 text-center">{getTreeMessage(growthStage)}</h1>
 
         <div className="text-center mt-6 text-gray-500">
-          Today's Average Stress: {stressToday.toFixed(2)}%
+          Today&apos;s Average Stress: {stressToday.toFixed(2)}%
         </div>
 
         {/* 📅 Mini Calendar */}
