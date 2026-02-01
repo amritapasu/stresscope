@@ -1,3 +1,7 @@
+# Stresscope
+
+Stresscope is a web application that tracks and logs user stress by applying computer vision models to camera input and behavioral cues.
+
 This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
 
 ## Getting Started
